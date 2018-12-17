@@ -45,7 +45,7 @@ phelex.results = phelex(x = x,
                         alpha.prior = c(10, 1), # Beta prior for misclassification in controls (focuses PheLEx to extract overdiagnosis of phenotype rather than controls that might have disease),
                         iterations = 1e5)  # Total number of iterations for method to run
                         
-misclassification_pr_cases = estimate_flip_probability(PheLEx.results$flip.cases)  # Misclassification probabilities estimated in cases
+misclassification_pr_cases = estimate_flip_probability(phelex.results$flip.cases)  # Misclassification probabilities estimated in cases
 corrected_phenotype = get_phenotype(flip.p.cases = misclassification_pr_cases, y=y)  # Phenotype corrected using misclassification probabilities provided. With this command, only a fraction of cases will be switched to controls.
 ```
 
