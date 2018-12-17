@@ -1,0 +1,14 @@
+Package: phelex
+Type: Package
+Title: Estimate misclassification probabilities for GWAS Phenotypes
+Version: 0.1.0
+Author: Afrah Shafquat
+URL: http://www.github.com/afrahshafquat/phelex
+BugReports: http://www.github.com/afrahshafquat/phelex/issues
+Maintainer: Afrah Shafquat <afrah.shafquat@gmail.com>
+Description: This package uses genotypes in GWAS datasets to estimate which cases and controls in given phenotype are misclassified, improving statistical power of analysis and identifying new loci that might be missed due to error in phenotype.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: modeest, truncdist, MASS, stats
+RoxygenNote: 6.0.1
