@@ -45,8 +45,11 @@ phelex.results = phelex(x = x,
                         alpha.prior = c(10, 1), # Beta prior for true-positive rate
                         iterations = 1e5)  # Total number of iterations for method to run
                         
-misclassification_pr_cases = estimate_flip_probability(phelex.results$flip.cases)  # Misclassification probabilities estimated in cases
-corrected_phenotype = get_phenotype(flip.p.cases = misclassification_pr_cases, y=y)  # Phenotype corrected using misclassification probabilities provided. With this command, only a fraction of cases will be switched to controls.
+# Misclassification probabilities estimated in cases                      
+misclassification.pr.cases = estimate_misclassification_probability(misclassified.samples = phelex.results$misclassified.cases)  
+
+# Corrected phenotype computed. With this command, only a fraction of cases will be switched to controls.
+corrected_phenotype = get_phenotype(misclassified.p.case = misclassification.pr.cases, y=y)  
 ```
 
 **Step 5**: Perform GWAS again using corrected phenotype.

@@ -116,7 +116,7 @@ logsum = function(a, b) {
 #' @keywords misclassification,probability
 #'
 #' @export
-estimate_flip_probability = function(misclassified.samples,
+estimate_misclassification_probability = function(misclassified.samples,
                          standardize=TRUE) {
   n = ncol(misclassified.samples)
   misclassified.p.samples = rowSums(misclassified.samples)/n

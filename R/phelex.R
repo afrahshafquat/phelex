@@ -160,7 +160,7 @@ phelex = function(x,
   }
 
 
-  beta = estimate_betas(betas.tmp[, beta.warmup:beta.iterations])
+  beta = phelex::estimate_betas(betas.tmp[, beta.warmup:beta.iterations])
   rm(betas.tmp)
 
   betas[,1] = beta
