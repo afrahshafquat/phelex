@@ -34,7 +34,7 @@ library(phelex)
 
 # Load dataset
 x = read.matrix('genotypes.txt')  # Genotypes should be in 0,1,2 format AND **filtered**
-y = read.table('phenotype.txt')  # Phenotypes file
+y = read.table('phenotype.txt')  # Phenotypes vector
 A = as.matrix(read.table('kinship_matrix.txt'))  # Kinship/Genetic relatedness matrix
 
 
@@ -61,6 +61,10 @@ corrected_phenotype = get_phenotype(flip.p.cases = misclassification_pr_cases, y
 * `beta.prior.params`: Prior on effect sizes of SNPs. The prior is normally-distributed by default (alt. uniform prior may be specified). You may want to change these parameters depending on prior knowledge about effect sizes.
 
 For documentation on other parameters, please refer to documentation provided.
+
+## Common issues
+
+* Relatedness matrix: this method doesn't support non-postive-definite relatedness matrices, so please make sure that the matrix used is positive-definite.
 
 ## Alternative methods
 
