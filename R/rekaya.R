@@ -28,13 +28,13 @@
 #' @export
 
 rekaya = function(y,
-                 x,
-                 pi1.prior = c(1, 4),
-                 pi2.prior = c(1, 4),
-                 beta.initial.vec = NULL,
-                 iterations = 1e4,
-                 stamp = 1e3,
-                 verbose = T) {
+                  x,
+                  pi1.prior = c(1, 4),
+                  pi2.prior = c(1, 4),
+                  beta.initial.vec = NULL,
+                  iterations = 1e4,
+                  stamp = 1e3,
+                  verbose = T) {
 
   if(verbose) print(paste('Entering function', date()))
 

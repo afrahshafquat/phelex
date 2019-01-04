@@ -173,7 +173,7 @@ phelex = function(x,
 
   # Adaptive Metropolis Hastings sampling algorithm within Gibbs
   for(i in 2:iterations) {
-    if (!(i %% stamp) & verbose) {
+    if ((!(i %% stamp)) & verbose) {
       print(paste(i, date()))
       # print(sigmaA)
     }
