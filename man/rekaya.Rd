@@ -31,8 +31,8 @@ List containing
  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
  Order is c(mu, pi1, pi2) where mu is mean effect size value, pi1/pi2 false positive/false negative rates.
- \item misclassified.cases: Matrix of vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
- \item misclassified.controls: Matrix of vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
+ \item misclassified.cases: Matrix of misclassification indicators where 1s represent false positives and 0s represent true positives as inferred at each iterations
+ \item misclassified.controls: Matrix of misclassification indicators where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
  }
 }
 \description{
@@ -40,4 +40,4 @@ Estimates misclassification probabilities in observed GWAS phenotype y given gen
 The method follows the algorithm defined by Rekaya et. al (PMC5138056; 2016) to predict misclassification probabilities
 using Gibbs Sampling algorithm.
 }
-\keyword{keywords}
+\keyword{rekaya,gibbs,misclassification,GWAS,phenotype}

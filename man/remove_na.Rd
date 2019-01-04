@@ -16,4 +16,4 @@ the corresponding column mean.
 \description{
 Replaces NA values from columns of matrix with column mean.
 }
-\keyword{keywords}
+\keyword{replace,missing,impute}

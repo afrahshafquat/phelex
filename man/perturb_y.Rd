@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{perturb_y}
 \alias{perturb_y}
-\title{Switches binary status of values}
+\title{Simulates misclassification in binary phenotype}
 \usage{
 perturb_y(y, lambda = NULL, c_alpha = NULL, seed = 1000)
 }
@@ -19,6 +19,7 @@ perturb_y(y, lambda = NULL, c_alpha = NULL, seed = 1000)
 Vector with switched 0s and 1s according to defined lambda and alpha.
 }
 \description{
-For vector y, fraction lambda of 0s are changed to 1s and fraction alpha of 1s to 0s.
+This function simulates misclassification of binary phenotype (vector y) by switching fraction lambda of 0 (controls)
+to 1 (cases) and fraction c_alpha of 1 (cases) to 0 (controls).
 }
-\keyword{keywords}
+\keyword{misclassification,phenotype,simulation}

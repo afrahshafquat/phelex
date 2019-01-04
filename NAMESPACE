@@ -2,7 +2,6 @@
 
 export(estimate_betas)
 export(estimate_flip_probability)
-export(get_beta)
 export(get_phenotype)
 export(logsum)
 export(perturb_y)

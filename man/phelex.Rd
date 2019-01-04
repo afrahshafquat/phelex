@@ -4,39 +4,42 @@
 \alias{phelex}
 \title{Estimate misclassification in phenotype}
 \usage{
-phelex(x, y, A = NULL, beta.initial.vec = NULL, sigmaA.initial = 0.01,
-  alpha.prior = c(1, 1), lambda.prior = c(1, 1), iterations = 1e+05,
-  beta.prior.params = c(2, 1), beta.iterations = 2e+05, verbose = TRUE,
-  stamp = 10000, link = "pnorm", beta.prior = "norm")
+phelex(x, y, A = NULL, iterations = 1e+05, alpha.prior = c(1, 1),
+  lambda.prior = c(1, 1), link = "pnorm", beta.prior = "norm",
+  beta.prior.params = c(2, 1), beta.initial.vec = NULL,
+  sigmaA.initial = 0.01, beta.iterations = 2e+05, beta.warmup = 20000,
+  verbose = TRUE, stamp = 10000)
 }
 \arguments{
-\item{x}{Genotype matrix with dimensions s x n.}
+\item{x}{Genotype matrix with dimensions n x m.}
 
-\item{y}{Phenotype vector with length s.}
+\item{y}{Phenotype vector with length n.}
 
-\item{A}{Genetic similarity matrix with dimensions s x s.}
+\item{A}{Genetic similarity matrix with dimensions n x n.}
 
-\item{beta.initial.vec}{Vector of initial values for beta parameters}
+\item{iterations}{Total number of iterations}
 
-\item{sigmaA.initial}{Starting value for variance parameter sigmaA where u ~ MVN(0, sigmaA*A).}
+\item{alpha.prior}{Beta prior parameters for true-positve rate}
 
-\item{alpha.prior}{Vector for Beta prior on alpha i.e. true positive rate.}
+\item{lambda.prior}{Beta prior parameters for false-positive rate}
 
-\item{lambda.prior}{Vector for Beta prior on lambda i.e. false positive rate.}
+\item{link}{probit or logistic model (options pnorm and plogis respectively)}
 
-\item{iterations}{Total number of iterations for Metropolis-Hastings Sampling}
+\item{beta.prior}{'norm'(default): Normal prior or 'unif' Uniform prior on fixed effects}
 
 \item{beta.prior.params}{if beta.prior is norm, then (mean, sd), if unif then (min, max)}
 
-\item{beta.iterations}{Total number of iterations to sample beta values}
+\item{beta.initial.vec}{Initial values for fixed effects}
+
+\item{sigmaA.initial}{Starting value for variance parameter sigmaA where u ~ MVN(0, sigmaA * A).}
+
+\item{beta.iterations}{Number of iterations to sample fixed effects (should be greater than beta.warmup)}
+
+\item{beta.warmup}{Burn-in/warmup for initial sampling for fixed effects}
 
 \item{verbose}{Default TRUE. Prints progress information}
 
 \item{stamp}{Iteration breakpoint to print time}
-
-\item{link}{probit or logistic model (options pnorm and plogis respectively)}
-
-\item{beta.prior}{'norm'(default): Normal prior for Betas, 'unif' then uniform prior on Betas.}
 }
 \value{
 List containing
@@ -55,4 +58,7 @@ Estimates misclassification probabilities in observed GWAS phenotype y given gen
 The method follows the PheLEx algorithm to predict misclassification probabilities
 using Adaptive Metropolis-Hastings and mixed model defined by Shafquat et al.
 }
-\keyword{keywords}
+\keyword{hastings,mixed}
+\keyword{metropolis}
+\keyword{model}
+\keyword{phelex,misclassification,GWAS,phenotype,adaptive}

@@ -4,10 +4,10 @@
 \alias{estimate_flip_probability}
 \title{Calculates misclassification probability for samples}
 \usage{
-estimate_flip_probability(flip.indicators, standardize = TRUE)
+estimate_flip_probability(misclassified.samples, standardize = TRUE)
 }
 \arguments{
-\item{flip.indicators}{Matrix of flip indicators (flip.cases or flip.controls)}
+\item{misclassified.samples}{Matrix of misclassification indicators (misclassified.samples or misclassified.controls)}
 
 \item{standardize}{Flag to normalize probability values (only when they are not normalized). Recommended to keep default.}
 }
@@ -15,8 +15,8 @@ estimate_flip_probability(flip.indicators, standardize = TRUE)
 Misclassification probabilities for samples
 }
 \description{
-Given model defined by Shafquat et al (...), the function estimates the probability
+Function estimates the probability
 that a case is not a true case or a control is not a true control with the
-matrix of flip indicators (flip.cases or flip.controls) from plvm_lmm/plvm/gibbs/gibbs_lmm
+matrix of misclassified.cases (misclassified.samples or misclassified.controls)
 }
-\keyword{keywords}
+\keyword{misclassification,probability}

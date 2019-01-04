@@ -4,35 +4,35 @@
 \alias{phelex_m}
 \title{Estimate misclassification in phenotype}
 \usage{
-phelex_m(x, y, beta.initial.vec = NULL, alpha.prior = c(1, 1),
-  lambda.prior = c(1, 1), iterations = 1e+05, beta.prior.params = c(1, 3),
-  verbose = TRUE, stamp = 1000, mu.update = 0.5, link = "pnorm",
-  beta.prior = "norm")
+phelex_m(x, y, iterations = 1e+05, alpha.prior = c(1, 1),
+  lambda.prior = c(1, 1), link = "pnorm", beta.prior = "norm",
+  beta.prior.params = c(1, 3), beta.initial.vec = NULL, mu.update = 0.5,
+  verbose = TRUE, stamp = 1000)
 }
 \arguments{
-\item{x}{Genotype matrix with dimensions s x n.}
+\item{x}{Genotype matrix with dimensions n x m.}
 
-\item{y}{Phenotype vector with length s.}
-
-\item{beta.initial.vec}{Vector of initial values for beta parameters i.e. effect sizes for n snps.}
-
-\item{alpha.prior}{Vector for Beta prior on alpha.}
-
-\item{lambda.prior}{Vector for Beta prior on lambda.}
+\item{y}{Phenotype vector with length n.}
 
 \item{iterations}{Total number of iterations for Metropolis-Hastings Sampling}
 
+\item{alpha.prior}{Beta prior parameters for true-positve rate}
+
+\item{lambda.prior}{Beta prior parameters for false-positive rate.}
+
+\item{link}{probit or logistic model (options pnorm and plogis respectively)}
+
+\item{beta.prior}{'norm'(default): Normal prior or 'unif' Uniform prior on fixed effects}
+
 \item{beta.prior.params}{if beta.prior is norm, then (mean, sd), if unif then (min, max)}
+
+\item{beta.initial.vec}{Vector of initial values for beta parameters i.e. effect sizes for n snps.}
+
+\item{mu.update}{Fractions of iterations to start updating mean fixed effects or mu. Default = 0.5}
 
 \item{verbose}{Default TRUE. Prints progress information}
 
 \item{stamp}{Iteration breakpoint to print time}
-
-\item{mu.update}{Fractions of iterations to start updating mean beta from.}
-
-\item{link}{probit or logistic model (options pnorm and plogis respectively)}
-
-\item{beta.prior}{'norm'(default): Normal prior for Betas, 'unif' then uniform prior on Betas.}
 }
 \value{
 List containing
@@ -51,4 +51,6 @@ Estimates misclassification probabilities in observed GWAS phenotype y given gen
 The method follows the PheLEx-m algorithm to predict misclassification probabilities
 using Adaptive Metropolis-Hastings defined by Shafquat et al.
 }
-\keyword{keywords}
+\keyword{hastings}
+\keyword{metropolis}
+\keyword{phelex_m,misclassification,GWAS,phenotype,adaptive}

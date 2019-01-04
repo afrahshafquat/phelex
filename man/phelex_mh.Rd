@@ -11,7 +11,7 @@ phelex_mh(y, x, A, pi1.prior = c(1, 4), pi2.prior = c(1, 4),
 \arguments{
 \item{y}{Phenotype vector with length n.}
 
-\item{x}{Genotype matrix with dimensions n x i.}
+\item{x}{Genotype matrix with dimensions n x m.}
 
 \item{A}{Genetic relatedness matrix with dimensions n x n.}
 
@@ -37,8 +37,8 @@ List containing
  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
  Order is c(sigmaA, pi1, pi2) where pi1/pi2 = false positive/false negative rates, sigmaA = variance parameter
- \item misclassified.cases: Matrix of alpha vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
- \item misclassified.controls: Matrix of lambda vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
+ \item misclassified.cases: Matrix of misclassification indicators where 1s represent false positives and 0s represent true positives as inferred at each iterations
+ \item misclassified.controls: Matrix of misclassification indicators where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
  }
 }
 \description{
@@ -46,4 +46,5 @@ Estimates misclassification probabilities in observed GWAS phenotype y given gen
 The method follows the PheLEx-mh algorithm to predict misclassification probabilities
 using Gibbs sampling and mixed model defined by Shafquat et al.
 }
-\keyword{keywords}
+\keyword{model}
+\keyword{phelex_mh,misclassification,GWAS,phenotype,gibbs,mixed}

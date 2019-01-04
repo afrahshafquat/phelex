@@ -4,26 +4,25 @@
 \alias{get_phenotype}
 \title{Computes modified phenotype}
 \usage{
-get_phenotype(flip.p.cases = NULL, flip.p.controls = NULL, y,
-  case.threshold = NULL, control.threshold = NULL)
+get_phenotype(misclassified.p.cases = NULL, misclassified.p.controls = NULL,
+  y, case.threshold = NULL, control.threshold = NULL)
 }
 \arguments{
-\item{flip.p.cases}{vector of misclassification probabilities for cases. If absent, only controls are switched}
-
-\item{flip.p.controls}{vector of misclassification probabilities for controls. If absent, only cases are switched}
-
 \item{y}{Vector of observed phenotype}
 
 \item{case.threshold}{All cases with Pr(misclassification) >= threshold are switched to controls.
 Default value is mean(probability) + 2*sd(probability).}
 
 \item{control.threshold}{All controls with Pr(misclassification) >= threshold are switched to cases}
+
+\item{misclassification.p.cases}{vector of misclassification probabilities for cases. If absent, only controls are switched}
+
+\item{misclassification.p.controls}{vector of misclassification probabilities for controls. If absent, only cases are switched}
 }
 \value{
 Modified Phenotype according to misclassification probabilities provided
 }
 \description{
-Given model defined by Shafquat et al (...), function computes
-modified phenotype using misclassification probability for each sample.
+Function computes corrected phenotype using misclassification probability for each sample.
 }
-\keyword{keywords}
+\keyword{corrected,phenotype,misclassification}

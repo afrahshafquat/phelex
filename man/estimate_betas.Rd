@@ -7,7 +7,7 @@
 estimate_betas(betas, method = "shorth")
 }
 \arguments{
-\item{betas}{Matrix with dimensions n x s (parameters x samples).}
+\item{betas}{Matrix with dimensions n x m (parameters x iterations).}
 
 \item{method}{Default value is shorth. See more in @details .}
 }
@@ -22,4 +22,4 @@ Available methods are "mfv", "lientz", "naive",
 "venter", "grenander", "hsm", "hrm", "parzen", "tsybakov", and "asselin".
 For more, see \code{\link[modeest]{mlv}} documentation.
 }
-\keyword{keywords}
+\keyword{mode,parameter,estimation}

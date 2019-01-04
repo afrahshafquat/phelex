@@ -21,7 +21,7 @@ remove_na = function(x) {
 #'
 #' Estimates mode for each parameter in matrix given vector of values.
 #'
-#' @param betas Matrix with dimensions n x s (parameters x samples).
+#' @param betas Matrix with dimensions n x m (parameters x iterations).
 #' @param method Default value is shorth. See more in @details .
 #'
 #' @details Available methods are "mfv", "lientz", "naive",
@@ -104,7 +104,7 @@ logsum = function(a, b) {
 
 #' Calculates misclassification probability for samples
 #'
-#' Given model defined by Shafquat et al (...), the function estimates the probability
+#' Function estimates the probability
 #' that a case is not a true case or a control is not a true control with the
 #' matrix of misclassified.cases (misclassified.samples or misclassified.controls)
 #'
@@ -128,8 +128,8 @@ estimate_flip_probability = function(misclassified.samples,
 
 #' Computes modified phenotype
 #'
-#' Given model defined by Shafquat et al (...), function computes
-#' modified phenotype using misclassification probability for each sample.
+#' Function computes corrected phenotype using misclassification probability for each sample.
+#'
 #'
 #' @param y Vector of observed phenotype
 #' @param misclassification.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
@@ -160,7 +160,7 @@ get_phenotype = function(misclassified.p.cases=NULL,
       case.threshold = mean(misclassified.p.cases) + (2 * sd(misclassified.p.cases))
     }
 
-    flip.inds = which(flip.p.cases >= case.threshold)
+    flip.inds = which(misclassified.p.cases >= case.threshold)
     corrected.phenotype[case.inds[flip.inds]]=0
   }
 
