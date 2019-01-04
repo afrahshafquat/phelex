@@ -2,9 +2,9 @@
 #'
 #' Replaces NA values from columns of matrix with column mean.
 #'
-#' @param x Genotype matrix with dimensions s x n.
+#' @param x Genotype matrix with dimensions n x m
 #'
-#' @return Genotype matrix with dimension s x n with NA values replaced with
+#' @return Genotype matrix with dimension n x m with NA values replaced with
 #' the corresponding column mean.
 #'
 #' @keywords replace,missing,impute
