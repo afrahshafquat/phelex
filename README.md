@@ -42,7 +42,7 @@ A = as.matrix(read.table('kinship_matrix.txt'))  # Kinship/Genetic relatedness m
 phelex.results = phelex(x = x,
                         y = y,
                         A = A,
-                        alpha.prior = c(10, 1), # Beta prior for misclassification in controls (focuses PheLEx to extract overdiagnosis of phenotype rather than controls that might have disease),
+                        alpha.prior = c(10, 1), # Beta prior for true-positive rate
                         iterations = 1e5)  # Total number of iterations for method to run
                         
 misclassification_pr_cases = estimate_flip_probability(phelex.results$flip.cases)  # Misclassification probabilities estimated in cases
