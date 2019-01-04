@@ -97,7 +97,7 @@ perturb_y = function(y,
 #' @export
 get_beta = function(beta, method = 'shorth') {
   est_beta = modeest::mlv(beta, method = 'shorth')
-  est_beta = est_beta$M
+  # est_beta = est_beta$M
   return(est_beta)
 }
 
