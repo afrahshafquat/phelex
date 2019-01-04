@@ -5,7 +5,7 @@
 #' using Gibbs sampling and mixed model defined by Shafquat et al.
 #'
 #' @param y Phenotype vector with length n.
-#' @param x Genotype matrix with dimensions n x i.
+#' @param x Genotype matrix with dimensions n x m.
 #' @param A Genetic relatedness matrix with dimensions n x n.
 #' @param pi1.prior hyperparameters for false positive rate pi1.
 #' @param pi2.prior hyperparameters for false negative rate pi2.
@@ -21,10 +21,10 @@
 #'  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
 #'  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
 #'  Order is c(sigmaA, pi1, pi2) where pi1/pi2 = false positive/false negative rates, sigmaA = variance parameter
-#'  \item misclassified.cases: Matrix of alpha vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
-#'  \item misclassified.controls: Matrix of lambda vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
+#'  \item misclassified.cases: Matrix of misclassification indicators where 1s represent false positives and 0s represent true positives as inferred at each iterations
+#'  \item misclassified.controls: Matrix of misclassification indicators where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
 #'  }
-#' @keywords keywords
+#' @keywords phelex_mh,misclassification,GWAS,phenotype,gibbs,mixed model
 #'
 #' @import truncdist
 #' @import stats
@@ -104,7 +104,7 @@ phelex_mh = function(y,
   if(verbose) print(paste('Starting Gibbs', date()))
 
   for(iteri in 2:iterations) {
-    if(!(iteri %% stamp) & verbose) {
+    if((!(iteri %% stamp)) & verbose) {
       print(paste(iteri, date()))
       print(sigmaA)
     }

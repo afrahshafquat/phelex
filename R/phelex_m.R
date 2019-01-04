@@ -4,18 +4,18 @@
 #' The method follows the PheLEx-m algorithm to predict misclassification probabilities
 #' using Adaptive Metropolis-Hastings defined by Shafquat et al.
 #'
-#' @param y Phenotype vector with length s.
-#' @param x Genotype matrix with dimensions s x n.
+#' @param y Phenotype vector with length n.
+#' @param x Genotype matrix with dimensions n x m.
 #' @param iterations Total number of iterations for Metropolis-Hastings Sampling
 #' @param beta.initial.vec Vector of initial values for beta parameters i.e. effect sizes for n snps.
-#' @param alpha.prior Vector for Beta prior on alpha.
-#' @param lambda.prior Vector for Beta prior on lambda.
-#' @param beta.prior 'norm'(default): Normal prior for Betas, 'unif' then uniform prior on Betas.
+#' @param alpha.prior Beta prior parameters for true-positve rate
+#' @param lambda.prior Beta prior parameters for false-positive rate.
+#' @param beta.prior 'norm'(default): Normal prior or 'unif' Uniform prior on fixed effects
 #' @param beta.prior.params if beta.prior is norm, then (mean, sd), if unif then (min, max)
 #' @param stamp Iteration breakpoint to print time
 #' @param link probit or logistic model (options pnorm and plogis respectively)
 #' @param verbose Default TRUE. Prints progress information
-#' @param mu.update Fractions of iterations to start updating mean beta from.
+#' @param mu.update Fractions of iterations to start updating mean fixed effects or mu. Default = 0.5
 #'
 #' @return  List containing
 #' \itemize{
@@ -28,7 +28,7 @@
 #'  \item accept: Vector of 1/0 values across iterations; 1 indicates proposal was accepted at iteration;0 o/w
 #'  }
 #'
-#' @keywords keywords
+#' @keywords phelex_m,misclassification,GWAS,phenotype,adaptive metropolis hastings
 #'
 #' @import MASS
 #' @import utils
@@ -37,16 +37,16 @@
 #'
 phelex_m = function(x,
                 y,
-                beta.initial.vec = NULL,
+                iterations = 1e5,
                 alpha.prior = c(1, 1),
                 lambda.prior = c(1, 1),
-                iterations = 1e5,
-                beta.prior.params = c(1, 3),
-                verbose = TRUE,
-                stamp = 1e3,
-                mu.update = 0.5,
                 link = 'pnorm',
-                beta.prior='norm') {
+                beta.prior='norm',
+                beta.prior.params = c(1, 3),
+                beta.initial.vec = NULL,
+                mu.update = 0.5,
+                verbose = TRUE,
+                stamp = 1e3) {
 
   markers = ncol(x)  # Number of markers
   x = remove_na(x)  # Removes missing values
@@ -64,11 +64,11 @@ phelex_m = function(x,
   num.params = 3  # mu, alpha, lambda
 
   accept.rate = rep(0, iterations)  # Acceptance of proposal sampled in MH
-  energy = rep(0, iterations)
-  betas = matrix(0, nrow = markers, ncol = iterations)
-  parameters = matrix(0, nrow = num.params, ncol = iterations)
-  alfas = matrix(0, nrow = length(case.inds), ncol = iterations)
-  lambdas = matrix(0, nrow = length(control.inds), ncol = iterations)
+  energy = rep(0, iterations)  # Posterior
+  betas = matrix(0, nrow = markers, ncol = iterations)  # Fixed effects
+  parameters = matrix(0, nrow = num.params, ncol = iterations)  # Parameters mu, alpha, lambda
+  alfas = matrix(0, nrow = length(case.inds), ncol = iterations) # Misclassification indicators in cases
+  lambdas = matrix(0, nrow = length(control.inds), ncol = iterations) # Misclassification indicators in controls
 
   alpha.index = num.params - 1
   lambda.index = num.params
@@ -99,7 +99,7 @@ phelex_m = function(x,
     return(lj)
   }
 
-  halfway = ceiling(mu.update*iterations)
+  mu.start = ceiling(mu.update*iterations)
   mu = 0
   alpha = rbeta(1, 1, 1)
   lambda = rbeta(1, 1, 1)
@@ -112,8 +112,8 @@ phelex_m = function(x,
   current.post = compute_posterior(plogis.x, beta, alpha, lambda)
   energy[1] = current.post
 
-  for(i in 2:iterations) {  # Metropolis Hastings sampling algorithm
-    if (! i %% stamp) {
+  for(i in 2:iterations) {  # Adaptive Metropolis Hastings sampling algorithm
+    if ((! i %% stamp) & verbose) {
       print(paste(i, date()))
     }
     if (! i %% 1e2) { # Adaptive part of MH
@@ -152,7 +152,7 @@ phelex_m = function(x,
       current.post = proposal.post
     }
 
-    if ((i > halfway & (! i %% 10))){
+    if ((i > mu.start & (! i %% 10))){
     #update mu using gibbs
       mu = sum(liab.x - (x %*% beta)) / n
       mu = rnorm(1, mean = mu, sd = 1 / sqrt(n))
@@ -162,10 +162,10 @@ phelex_m = function(x,
     }
 
     flip.alpha = log(alpha) + log(plogis.x) - log(1 - plogis.x) - log(lambda)
-    flip.alpha = 1 / (1 + exp(flip.alpha))
+    flip.alpha = 1 / (1 + exp(flip.alpha)) #probability for misclassification in observed cases
 
     flip.lambda = log(1 - plogis.x) + log(1 - lambda) - log(1 - alpha) - log(plogis.x)
-    flip.lambda = 1 / (1 + exp(flip.lambda))
+    flip.lambda = 1 / (1 + exp(flip.lambda)) #probability for misclassification in observed controls
 
     alfa.i = rbinom(length(case.inds), 1, flip.alpha[case.inds])
     lambda.i = rbinom(length(control.inds), 1, flip.lambda[control.inds])

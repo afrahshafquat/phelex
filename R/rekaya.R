@@ -18,10 +18,10 @@
 #'  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
 #'  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
 #'  Order is c(mu, pi1, pi2) where mu is mean effect size value, pi1/pi2 false positive/false negative rates.
-#'  \item misclassified.cases: Matrix of vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
-#'  \item misclassified.controls: Matrix of vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
+#'  \item misclassified.cases: Matrix of misclassification indicators where 1s represent false positives and 0s represent true positives as inferred at each iterations
+#'  \item misclassified.controls: Matrix of misclassification indicators where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
 #'  }
-#' @keywords keywords
+#' @keywords rekaya,gibbs,misclassification,GWAS,phenotype
 #'
 #' @import truncdist
 #' @import stats
@@ -89,7 +89,7 @@ rekaya = function(y,
   if(verbose) print(paste('Starting Gibbs', date()))
 
   for(iteri in 2:iterations) {
-    if(!(iteri %% stamp) & verbose) {
+    if((!(iteri %% stamp)) & verbose) {
       print(paste(iteri, date()))
     }
 

@@ -7,7 +7,7 @@
 #' @return Genotype matrix with dimension s x n with NA values replaced with
 #' the corresponding column mean.
 #'
-#' @keywords keywords
+#' @keywords replace,missing,impute
 #'
 #' @export
 remove_na = function(x) {
@@ -29,21 +29,24 @@ remove_na = function(x) {
 #' For more, see \code{\link[modeest]{mlv}} documentation.
 #'
 #' @return Vector of estimated mode values for each parameter (n)
-#' @keywords keywords
+#' @keywords mode,parameter,estimation
 #'
+#' @import modeest
 #' @export
 estimate_betas = function(betas,  method = 'shorth') {
   betas = betas
-  final_betas = rep(0, nrow(betas))
-  for(k in 1:nrow(betas)){
-    final_betas[k] = get_beta(betas[k, ], method = method)
-  }
+  # final_betas = rep(0, nrow(betas))
+  # for(k in 1:nrow(betas)){
+  #   final_betas[k] = get_beta(betas[k, ], method = method)
+  # }
+  final_betas = apply(betas, 1, modeest::mlv, method=method)
   return(final_betas)
 }
 
-#' Switches binary status of values
+#' Simulates misclassification in binary phenotype
 #'
-#' For vector y, fraction lambda of 0s are changed to 1s and fraction alpha of 1s to 0s.
+#' This function simulates misclassification of binary phenotype (vector y) by switching fraction lambda of 0 (controls)
+#' to 1 (cases) and fraction c_alpha of 1 (cases) to 0 (controls).
 #'
 #' @param y Vector of values of 0s and 1s.
 #' @param lambda Fraction of controls switched to cases. Default is NULL (no switch).
@@ -51,7 +54,7 @@ estimate_betas = function(betas,  method = 'shorth') {
 #' @param seed Seed number to ensure different switches take place everytime. Default is 1000.
 #'
 #' @return Vector with switched 0s and 1s according to defined lambda and alpha.
-#' @keywords keywords
+#' @keywords misclassification,phenotype,simulation
 #'
 #' @export
 perturb_y = function(y,
@@ -62,43 +65,20 @@ perturb_y = function(y,
   set.seed(seed = seed)
   n = length(ybar)
 
-  case_inds = which(y == 1)
-  control_inds = which(y == 0)
+  case.inds = which(y == 1)
+  control.inds = which(y == 0)
 
   if (! is.null(c_alpha)) {
-    flipcases = floor((1 - c_alpha) * length(case_inds))
-    flipcase_inds = sample(case_inds, flipcases)
-    y[flipcase_inds] = 0
+    flipcases = floor((1 - c_alpha) * length(case.inds))
+    flipcase.inds = sample(case.inds, flipcases)
+    y[flipcase.inds] = 0
   }
   if (! is.null(lambda)) {
-    flipcontrols = floor(lambda * length(control_inds))
-    flipcontrol_inds = sample(control_inds, flipcontrols)
-    y[flipcontrol_inds] = 1
+    flipcontrols = floor(lambda * length(control.inds))
+    flipcontrol.inds = sample(control.inds, flipcontrols)
+    y[flipcontrol.inds] = 1
   }
   return(y)
-}
-
-#' Return mode for a vector of values
-#'
-#' Given vector of values beta, the function returns the mode as
-#' estimated by \code{\link[modeest]{mlv}}.
-#'
-#' @param beta Vector of values..
-#' @param method Default value is shorth. See more in @details .
-#'
-#' @details Available methods are "mfv", "lientz", "naive",
-#' "venter", "grenander", "hsm", "hrm", "parzen", "tsybakov", and "asselin".
-#' For more, see \code{\link[modeest]{mlv}} documentation.
-#'
-#' @return Estimated mode value.
-#' @keywords keywords
-#'
-#' @import modeest
-#' @export
-get_beta = function(beta, method = 'shorth') {
-  est_beta = modeest::mlv(beta, method = 'shorth')
-  # est_beta = est_beta$M
-  return(est_beta)
 }
 
 #' Log sum of values x and y
@@ -126,24 +106,24 @@ logsum = function(a, b) {
 #'
 #' Given model defined by Shafquat et al (...), the function estimates the probability
 #' that a case is not a true case or a control is not a true control with the
-#' matrix of flip indicators (flip.cases or flip.controls) from plvm_lmm/plvm/gibbs/gibbs_lmm
+#' matrix of misclassified.cases (misclassified.samples or misclassified.controls)
 #'
-#' @param flip.indicators Matrix of flip indicators (flip.cases or flip.controls)
+#' @param misclassified.samples Matrix of misclassification indicators (misclassified.samples or misclassified.controls)
 #' @param standardize Flag to normalize probability values (only when they are not normalized). Recommended to keep default.
 #'
 #' @return Misclassification probabilities for samples
 #'
-#' @keywords keywords
+#' @keywords misclassification,probability
 #'
 #' @export
-estimate_flip_probability = function(flip.indicators,
+estimate_flip_probability = function(misclassified.samples,
                          standardize=TRUE) {
-  n = ncol(flip.indicators)
-  flip.p = rowSums(flip.indicators)/n
-  if(standardize & (mean(flip.p) > 0.6)){
-    flip.p = 1-flip.p
+  n = ncol(misclassified.samples)
+  misclassified.p.samples = rowSums(misclassified.samples)/n
+  if(standardize & (mean(misclassified.p.samples) > 0.6)){
+    misclassified.p.samples = 1-misclassified.p.samples
   }
-  return(flip.p)
+  return(misclassified.p.samples)
 }
 
 #' Computes modified phenotype
@@ -152,48 +132,48 @@ estimate_flip_probability = function(flip.indicators,
 #' modified phenotype using misclassification probability for each sample.
 #'
 #' @param y Vector of observed phenotype
-#' @param flip.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
-#' @param flip.p.controls vector of misclassification probabilities for controls. If absent, only cases are switched
+#' @param misclassification.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
+#' @param misclassification.p.controls vector of misclassification probabilities for controls. If absent, only cases are switched
 #' @param case.threshold All cases with Pr(misclassification) >= threshold are switched to controls.
 #' Default value is mean(probability) + 2*sd(probability).
 #' @param control.threshold All controls with Pr(misclassification) >= threshold are switched to cases
 #'
 #' @return Modified Phenotype according to misclassification probabilities provided
 #'
-#' @keywords keywords
+#' @keywords corrected,phenotype,misclassification
 #'
 #' @export
-get_phenotype = function(flip.p.cases=NULL,
-                         flip.p.controls=NULL,
+get_phenotype = function(misclassified.p.cases=NULL,
+                         misclassified.p.controls=NULL,
                          y,
                          case.threshold=NULL,
                          control.threshold=NULL) {
   case.inds = (y == 1)
   control.inds = which(!case.inds)
   case.inds = which(case.inds)
-  corrected_phenotype = y
+  corrected.phenotype = y
 
   # Switch cases to controls
-  if(!is.null(flip.p.cases)){
+  if(!is.null(misclassified.p.cases)){
 
     if(is.null(case.threshold)){  # Provide threshold if not specified
-      case.threshold = mean(flip.p.cases) + (2 * sd(flip.p.cases))
+      case.threshold = mean(misclassified.p.cases) + (2 * sd(misclassified.p.cases))
     }
 
     flip.inds = which(flip.p.cases >= case.threshold)
-    corrected_phenotype[case.inds[flip.inds]]=0
+    corrected.phenotype[case.inds[flip.inds]]=0
   }
 
   # Switch controls to cases
-  if(!is.null(flip.p.controls)){
+  if(!is.null(misclassified.p.controls)){
 
     if(is.null(control.threshold)){  # Provide threshold if not specified
-      control.threshold = mean(flip.p.controls) + (2 * sd(flip.p.controls))
+      control.threshold = mean(misclassified.p.controls) + (2 * sd(misclassified.p.controls))
     }
 
-    flip.inds = which(flip.p.controls >= control.threshold)
-    corrected_phenotype[control.inds[flip.inds]] = 1
+    flip.inds = which(misclassified.p.controls >= control.threshold)
+    corrected.phenotype[control.inds[flip.inds]] = 1
   }
 
-  return(corrected_phenotype)
+  return(corrected.phenotype)
 }
