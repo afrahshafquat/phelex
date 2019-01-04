@@ -51,10 +51,6 @@ corrected_phenotype = get_phenotype(flip.p.cases = misclassification_pr_cases, y
 
 **Step 5**: Perform GWAS again using corrected phenotype.
 
-## Example
-
-![GWAS results](data/overview.png)
-
 ## Optional parameters
 
 * `alpha.prior and lambda.prior`: Beta Priors for true positive and false-positive rates respectively. Examples:
@@ -69,8 +65,9 @@ For documentation on other parameters, please refer to documentation provided.
 ## Alternative methods
 
 PheLEx encloses three methods other than PheLEx: 
-(1) PheLEx without mixed effects (**phelex_m**), 
-(2) Rekaya's method (**rekaya**)
-(3) PheLEx with Gibbs sampling instead of Adaptive Metropolis-Hastings within Gibbs (**phelex_mh**). 
+
+1. PheLEx without mixed effects (**phelex_m**), 
+2. Rekaya's method (**rekaya**)
+3. PheLEx with Gibbs sampling instead of Adaptive Metropolis-Hastings within Gibbs (**phelex_mh**). 
 
 Please refer to the manuscript and/or documentation for details on each method.
