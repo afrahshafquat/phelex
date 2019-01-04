@@ -67,7 +67,7 @@ For documentation on other parameters, please refer to documentation provided.
 PheLEx encloses three methods other than PheLEx: 
 
 1. PheLEx without mixed effects (**phelex_m**), 
-2. Rekaya's method (**rekaya**)
+2. [Rekaya's method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5138056/) (**rekaya**)
 3. PheLEx with Gibbs sampling instead of Adaptive Metropolis-Hastings within Gibbs (**phelex_mh**). 
 
 Please refer to the manuscript and/or documentation for details on each method.
