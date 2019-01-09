@@ -7,10 +7,10 @@
 remove_na(x)
 }
 \arguments{
-\item{x}{Genotype matrix with dimensions s x n.}
+\item{x}{Genotype matrix with dimensions n x m}
 }
 \value{
-Genotype matrix with dimension s x n with NA values replaced with
+Genotype matrix with dimension n x m with NA values replaced with
 the corresponding column mean.
 }
 \description{

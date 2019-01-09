@@ -8,16 +8,16 @@ get_phenotype(misclassified.p.cases = NULL, misclassified.p.controls = NULL,
   y, case.threshold = NULL, control.threshold = NULL)
 }
 \arguments{
+\item{misclassified.p.cases}{vector of misclassification probabilities for cases. If absent, only controls are switched}
+
+\item{misclassified.p.controls}{vector of misclassification probabilities for controls. If absent, only cases are switched}
+
 \item{y}{Vector of observed phenotype}
 
 \item{case.threshold}{All cases with Pr(misclassification) >= threshold are switched to controls.
 Default value is mean(probability) + 2*sd(probability).}
 
 \item{control.threshold}{All controls with Pr(misclassification) >= threshold are switched to cases}
-
-\item{misclassification.p.cases}{vector of misclassification probabilities for cases. If absent, only controls are switched}
-
-\item{misclassification.p.controls}{vector of misclassification probabilities for controls. If absent, only cases are switched}
 }
 \value{
 Modified Phenotype according to misclassification probabilities provided

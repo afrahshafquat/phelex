@@ -132,8 +132,8 @@ estimate_misclassification_probability = function(misclassified.samples,
 #'
 #'
 #' @param y Vector of observed phenotype
-#' @param misclassification.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
-#' @param misclassification.p.controls vector of misclassification probabilities for controls. If absent, only cases are switched
+#' @param misclassified.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
+#' @param misclassified.p.controls vector of misclassification probabilities for controls. If absent, only cases are switched
 #' @param case.threshold All cases with Pr(misclassification) >= threshold are switched to controls.
 #' Default value is mean(probability) + 2*sd(probability).
 #' @param control.threshold All controls with Pr(misclassification) >= threshold are switched to cases
