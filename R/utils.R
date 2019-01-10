@@ -120,7 +120,7 @@ estimate_misclassification_probability = function(misclassified.samples,
                          standardize=TRUE) {
   n = ncol(misclassified.samples)
   misclassified.p.samples = rowSums(misclassified.samples)/n
-  if(standardize & (mean(misclassified.p.samples) > 0.6)){
+  if(standardize & (mean(misclassified.p.samples) > 0.5)){
     misclassified.p.samples = 1-misclassified.p.samples
   }
   return(misclassified.p.samples)
