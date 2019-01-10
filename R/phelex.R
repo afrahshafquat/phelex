@@ -159,7 +159,6 @@ phelex = function(x,
     betas.tmp[, i] = beta
   }
 
-
   beta = phelex::estimate_betas(betas.tmp[, beta.warmup:beta.iterations])
   rm(betas.tmp)
 
@@ -175,7 +174,6 @@ phelex = function(x,
   for(i in 2:iterations) {
     if ((!(i %% stamp)) & verbose) {
       print(paste(i, date()))
-      # print(sigmaA)
     }
     if (! i %% 1e2) { # Adaptive part of MH
       #update beta.jump.sd
