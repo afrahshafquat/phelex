@@ -133,12 +133,13 @@ phelex_mh = function(y,
     }
     u = u.tmp
 
-    sigmaA = 1/(rtrunc(1,'gamma', shape=(n-2), rate=(t(u) %*% invA %*% u), a=0.01))
+    sigmaA = 1/(truncdist::rtrunc(1,'gamma', shape=(n-2), rate=(t(u) %*% invA %*% u), a=0.01))
 
     l.mu = x %*% beta + u  # Update liability
     lj = r
-    lj[r==1] = rtrunc(sum(r), spec = 'norm', mean = l.mu[r==1], sd = 1, a = 0)
-    lj[r==0] = rtrunc(sum(r==0), spec = 'norm', mean = l.mu[r==0], sd = 1, b = 0)
+
+    lj[r==1] = vapply(l.mu[r==1], function(ii) truncdist::rtrunc(1, spec = 'norm', mean = ii, sd = 1, a = 0), 1.0)
+    lj[r==0] = vapply(l.mu[r==0], function(ii) truncdist::rtrunc(1, spec = 'norm', mean = ii, sd = 1, b = 0), 1.0)
 
     pi.b = pnorm(lj)  # Update piB funciton of SNP effects
 
