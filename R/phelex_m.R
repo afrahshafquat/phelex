@@ -15,6 +15,7 @@
 #' @param stamp Iteration breakpoint to print time
 #' @param link probit or logistic model (options pnorm and plogis respectively)
 #' @param verbose Default TRUE. Prints progress information
+#' @param normalize Default FALSE. Scales liability computed
 #' @param mu.update Fractions of iterations to start updating mean fixed effects or mu. Default = 0.5
 #'
 #' @return  List containing
@@ -46,6 +47,7 @@ phelex_m = function(x,
                 beta.initial.vec = NULL,
                 mu.update = 0.5,
                 verbose = TRUE,
+                normalize = FALSE,
                 stamp = 1e3) {
 
   markers = ncol(x)  # Number of markers
@@ -93,13 +95,13 @@ phelex_m = function(x,
     return(energy)
   }
 
-  compute_liability = function(betas){
+  compute_liability = function(betas, normalize=normalize){
     lj = x %*% betas + mu
-    #if(normalize==TRUE) lj = scale(lj)
+    if(normalize) lj = scale(lj)
     return(lj)
   }
 
-  mu.start = ceiling(mu.update*iterations)
+  mu.start = ceiling((1-mu.update)*iterations)
   mu = 0
   alpha = rbeta(1, 1, 1)
   lambda = rbeta(1, 1, 1)

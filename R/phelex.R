@@ -17,6 +17,7 @@
 #' @param beta.warmup Burn-in/warmup for initial sampling for fixed effects
 #' @param beta.iterations Number of iterations to sample fixed effects (should be greater than beta.warmup)
 #' @param stamp Iteration breakpoint to print time
+#' @param normalize Default TRUE. scales liability
 #' @param link probit or logistic model (options pnorm and plogis respectively)
 #' @param verbose Default TRUE. Prints progress information
 
@@ -52,6 +53,7 @@ phelex = function(x,
                   sigmaA.initial = 0.01,
                   beta.iterations = 2e5,
                   beta.warmup = 2e4,
+                  normalize = TRUE,
                   verbose = TRUE,
                   stamp = 1e4) {
 
@@ -99,9 +101,9 @@ phelex = function(x,
     return(energy)
   }
 
-  compute_liability = function(betas){
+  compute_liability = function(betas, normalize=normalize){
     lj = x %*% betas + u
-    lj = scale(lj)
+    if(normalize) lj = scale(lj)
     return(lj)
   }
 

@@ -89,9 +89,9 @@ rekaya = function(y,
   if(verbose) print(paste('Starting Gibbs', date()))
 
   for(iteri in 2:iterations) {
-    # if((!(iteri %% stamp)) & verbose) {
-    #   print(paste(iteri, date()))
-    # }
+    if((!(iteri %% stamp)) & verbose) {
+      print(paste(iteri, date()))
+    }
 
     beta.tmp = beta  # Update Betas
     for(j in 1:markers) {
