@@ -106,7 +106,6 @@ phelex_mh = function(y,
   for(iteri in 2:iterations) {
     if((!(iteri %% stamp)) & verbose) {
       print(paste(iteri, date()))
-      print(sigmaA)
     }
 
     beta.tmp = beta  # Update betas
