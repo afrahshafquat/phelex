@@ -1,4 +1,4 @@
-# PheLEx : (Phenotype Latent variable Extraction)
+# PheLEx : (Phenotype Latent variable Extraction of disease misdiagnosis)
 
 An R package for extracting differentially misclassified samples from GWAS phenotypes to improve statistical power of association analysis and identify novel disease-associated loci.
 
