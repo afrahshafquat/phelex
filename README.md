@@ -4,7 +4,7 @@ An R package for extracting differentially misclassified samples from GWAS pheno
 
 Useful applications include investigating GWAS phenotypes with lower statistical power or GWAS studies that fail to produce any results using traditional methodologies (i.e. Linear Mixed Model).
 
-For more details, please refer to our paper [Identifying misclassified samples in GWAS phenotypes using PheLEx (in preparation)](http:://)
+For more details, please refer to our paper [Identifying misclassified samples in GWAS phenotypes using PheLEx (in preparation)](https://www.biorxiv.org/content/10.1101/536532v1)
 
 This repository includes four methods to extract misclassified samples from GWAS phenotypes and demo dataset to present a demonstration on how the method works. For this tutorial we only include documentation for PheLEx, the recommended method for extracting misclassifications. 
 
@@ -25,7 +25,7 @@ You may install phelex using one of the following options. Pre-requisites for ph
 
 **Step 2**: If GWAS produces statistically significant SNPs (according to Bonferroni-corrected p-value threshold), only provide those as input to PheLEx. Alternatively, you may use a reasonable p-value threshold or other information statistics to filter SNPs.
 
-**Step 3**: You may use [PhenotypeSimulator](https://cran.r-project.org/web/packages/PhenotypeSimulator/index.html) or GEMMA to produce a relatedness/kinship matrix. Other software that do the same should be fine as well. *Please ensure that the matrix is positive-definite*
+**Step 3**: You may use [PhenotypeSimulator](https://cran.r-project.org/web/packages/PhenotypeSimulator/index.html) or [GEMMA](http://www.xzlab.org/software.html) to produce a relatedness/kinship matrix. Other software that do the same should be fine as well. *Please ensure that the matrix is positive-definite*
 
 **Step 4**: Use PheLEx to extract misclassified samples. We provide the code below as an example to extract misdiagnosis in cases from GWAS phenotypes. *(Please note that there are several parameters in the method that can be customized according to the kind of analysis being pursued. The following is only to be considered as one of many different possibilties)*
 
