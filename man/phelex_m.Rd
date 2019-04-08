@@ -6,8 +6,8 @@
 \usage{
 phelex_m(x, y, iterations = 1e+05, alpha.prior = c(1, 1),
   lambda.prior = c(1, 1), link = "pnorm", beta.prior = "norm",
-  beta.prior.params = c(1, 3), beta.initial.vec = NULL, mu.update = 0.5,
-  verbose = TRUE, normalize = FALSE, stamp = 1000)
+  beta.prior.params = c(1, 3), beta.initial.vec = NULL,
+  mu.update = 0.5, verbose = TRUE, normalize = FALSE, stamp = 1000)
 }
 \arguments{
 \item{x}{Genotype matrix with dimensions n x m.}

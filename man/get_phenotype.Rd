@@ -4,8 +4,9 @@
 \alias{get_phenotype}
 \title{Computes modified phenotype}
 \usage{
-get_phenotype(misclassified.p.cases = NULL, misclassified.p.controls = NULL,
-  y, case.threshold = NULL, control.threshold = NULL)
+get_phenotype(misclassified.p.cases = NULL,
+  misclassified.p.controls = NULL, y, case.threshold = NULL,
+  control.threshold = NULL)
 }
 \arguments{
 \item{misclassified.p.cases}{vector of misclassification probabilities for cases. If absent, only controls are switched}

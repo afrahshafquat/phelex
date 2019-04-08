@@ -7,8 +7,8 @@
 phelex(x, y, A = NULL, iterations = 1e+05, alpha.prior = c(1, 1),
   lambda.prior = c(1, 1), link = "pnorm", beta.prior = "norm",
   beta.prior.params = c(2, 1), beta.initial.vec = NULL,
-  sigmaA.initial = 0.01, beta.iterations = 2e+05, beta.warmup = 20000,
-  normalize = TRUE, verbose = TRUE, stamp = 10000)
+  sigmaA.initial = 0.01, beta.iterations = 2e+05,
+  beta.warmup = 20000, verbose = TRUE, stamp = 10000)
 }
 \arguments{
 \item{x}{Genotype matrix with dimensions n x m.}
@@ -36,8 +36,6 @@ phelex(x, y, A = NULL, iterations = 1e+05, alpha.prior = c(1, 1),
 \item{beta.iterations}{Number of iterations to sample fixed effects (should be greater than beta.warmup)}
 
 \item{beta.warmup}{Burn-in/warmup for initial sampling for fixed effects}
-
-\item{normalize}{Default TRUE. scales liability}
 
 \item{verbose}{Default TRUE. Prints progress information}
 
