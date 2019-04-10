@@ -37,17 +37,16 @@
 #' @import utils
 #' @import stats
 #' @import truncdist
+#' @import LaplacesDemon
 #' @export
 #'
-phelex = function(x,
+phelex_mx = function(x,
                   y,
                   A=NULL,
                   iterations = 1e5,
                   alpha.prior = c(1, 1),
                   lambda.prior = c(1, 1),
                   link = 'pnorm',
-                  beta.prior = 'norm',
-                  beta.prior.params = c(2, 1),
                   beta.initial.vec = NULL,
                   sigmaA.initial = 0.01,
                   beta.iterations = 2e5,
@@ -56,6 +55,7 @@ phelex = function(x,
                   stamp = 1e4) {
 
   markers = ncol(x)  # Number of markers
+  print(markers)
   x = remove_na(x)  # Removes missing values
   x = x
 
@@ -86,15 +86,21 @@ phelex = function(x,
 
   lsi = 0
   beta.jump.sd = exp(2*-1.49)
-  beta.prior.param1 = beta.prior.params[1]
-  beta.prior.param2 = beta.prior.params[2]
+  gamma.val = rep(0, markers)
+  a.val = c(1,1)
+  tau.val = LaplacesDemon::rinvgamma(1, a.val[1], a.val[2])
+  tau.val = c(1e-4*tau.val, tau.val)
 
-  compute_posterior = function(plogis.x, betas, alpha, lambda){
+  compute_posterior = function(plogis.x, betas, alpha, lambda, gammaj, a, tau){
     ll = sum(log((plogis.x * (alpha ^ y) * ((1 - alpha) ^ (1 - y)))+
                    ((1 - plogis.x) * (lambda ^ y) * ((1 - lambda) ^ (1 - y)))))
-    prior = sum(c(beta.prior(betas, beta.prior.param1, beta.prior.param2, log = T),
+    tau_vec = rep(sqrt(tau[1]), length(betas))
+    tau_vec[gammaj==1] = sqrt(tau[2])
+
+    prior = sum(c(dnorm(betas, mean=0, sd=tau_vec, log = T),
                   dbeta(alpha, shape1 = alpha.prior[1], shape2 = alpha.prior[2], log = T),
-                  dbeta(lambda, shape1 = lambda.prior[1], shape2 = lambda.prior[2], log = T)))
+                  dbeta(lambda, shape1 = lambda.prior[1], shape2 = lambda.prior[2], log = T),
+                  LaplacesDemon::dinvgamma(tau[2], a[1], a[2], log=T)))
     energy = ll + prior
     return(energy)
   }
@@ -112,14 +118,20 @@ phelex = function(x,
   liab.x = compute_liability(beta)
   plogis.x = link(liab.x)
 
-  current.post = compute_posterior(plogis.x, beta, alpha, lambda)
+  current.post = compute_posterior(plogis.x, beta, alpha, lambda, gamma.val, a.val, tau.val)
+
   betas.tmp = matrix(0, nrow = markers, ncol = beta.iterations)
+
   if(verbose) print(paste('Warmups for Beta, Alpha and Lambda', date()))
+
   beta.accept=rep(0, beta.iterations)
+
   # Adaptive Metropolis Hastings sampling algorithm for initial estimates for parameters
   for(i in 1:beta.iterations) {
-    if((!(i %% 1e5)) & verbose) {
+    if((!(i %% 1e4)) & verbose) {
       print(paste(i, date()))
+      print(current.post)
+      print(sum(beta.accept))
     }
     if (! i %% 1e2) { # Adaptive part of MH
       #update beta.jump.sd
@@ -134,15 +146,28 @@ phelex = function(x,
     }
 
     # MCMC Proposal step
-    proposal.beta = rnorm(markers, mean = beta, sd = beta.jump.sd)
     proposal.alpha = truncdist::rtrunc(1, 'norm', a = 0, b = 1, mean = alpha, sd = 0.1)
     proposal.lambda = truncdist::rtrunc(1, 'norm', a = 0, b = 1, mean = lambda, sd = 0.1)
+    proposal.pij = runif(markers, min = sqrt(abs(beta)), max=1)
+    proposal.gamma.j = rbinom(markers, 1, prob = proposal.pij)
+    proposal.beta = rnorm(markers, mean = beta, sd = beta.jump.sd)
+    proposal.a1 = truncdist::rtrunc(1, 'norm', a = 0, b = 100, mean = a.val[1], sd = 0.1)
+    proposal.a2 = truncdist::rtrunc(1, 'norm', a = 0, b = 100, mean = a.val[2], sd = 0.1)
+    proposal.a = c(proposal.a1, proposal.a2)
+    slab = LaplacesDemon::rinvgamma(1, proposal.a[1], proposal.a[2])
+    proposal.tau = c(1e-4*slab, slab)
 
     #Posterior Proposal
     proposal.liab = compute_liability(proposal.beta)
-    proposal.plogis = link(proposal.liab)
-    proposal.post = compute_posterior(proposal.plogis, proposal.beta, proposal.alpha, proposal.lambda) #ll1 + prior1
 
+    proposal.plogis = link(proposal.liab)
+    proposal.post = compute_posterior(proposal.plogis,
+                                      proposal.beta,
+                                      proposal.alpha,
+                                      proposal.lambda,
+                                      proposal.gamma.j,
+                                      proposal.a,
+                                      proposal.tau) #ll1 + prior1
     #Accept/Reject
     p = exp(proposal.post - current.post)
 
@@ -154,6 +179,9 @@ phelex = function(x,
       plogis.x = proposal.plogis
       liab.x = proposal.liab
       current.post = proposal.post
+      gamma.val = proposal.gamma.j
+      a.val = proposal.a
+      tau.val = proposal.tau
     }
     betas.tmp[, i] = beta
   }
@@ -190,11 +218,22 @@ phelex = function(x,
     proposal.beta = rnorm(markers, mean = beta, sd = beta.jump.sd)
     proposal.alpha = truncdist::rtrunc(1, 'norm', a = 0, b = 1, mean = alpha, sd = 0.1)
     proposal.lambda = truncdist::rtrunc(1, 'norm', a = 0, b = 1, mean = lambda, sd = 0.1)
+    proposal.pij = runif(markers, min = 0, max=1)
+    proposal.gamma.j = rbinom(markers, 1, prob = proposal.pij)
+    proposal.a = runif(2, min=1e-10, max=100)
+    slab = LaplacesDemon::rinvgamma(1, proposal.a[1], proposal.a[2])
+    proposal.tau = c(1e-4*slab, slab)
 
     #Posterior Proposal
     proposal.liab = compute_liability(proposal.beta)
     proposal.plogis = link(proposal.liab)
-    proposal.post = compute_posterior(proposal.plogis, proposal.beta, proposal.alpha, proposal.lambda) #ll1 + prior1
+    proposal.post = compute_posterior(proposal.plogis,
+                                      proposal.beta,
+                                      proposal.alpha,
+                                      proposal.lambda,
+                                      proposal.gamma.j,
+                                      proposal.a,
+                                      proposal.tau) #ll1 + prior1
 
     #Accept/Reject
     p = exp(proposal.post - current.post)
@@ -206,6 +245,9 @@ phelex = function(x,
       lambda = proposal.lambda
       plogis.x = proposal.plogis
       liab.x = proposal.liab
+      gamma.val = proposal.gamma.j
+      a.val = proposal.a
+      tau.val = proposal.tau
 
       #Gibbs Sampling for random effect
       u.tmp = u
@@ -225,7 +267,7 @@ phelex = function(x,
 
       liab.x = compute_liability(beta)
       plogis.x = link(liab.x)
-      current.post = compute_posterior(plogis.x, beta, alpha, lambda)
+      current.post = compute_posterior(plogis.x, beta, alpha, lambda,gamma.val, a.val, tau.val)
     }
 
     betas[, i] = beta

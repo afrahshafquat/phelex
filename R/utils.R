@@ -69,7 +69,7 @@ perturb_y = function(y,
   control.inds = which(y == 0)
 
   if (! is.null(c_alpha)) {
-    flipcases = floor((1 - c_alpha) * length(case.inds))
+    flipcases = floor(c_alpha * length(case.inds))
     flipcase.inds = sample(case.inds, flipcases)
     y[flipcase.inds] = 0
   }
