@@ -101,6 +101,7 @@ phelex = function(x,
 
   compute_liability = function(betas){
     lj = x %*% betas + u
+    lj = scale(lj)
     return(lj)
   }
 
@@ -159,6 +160,9 @@ phelex = function(x,
   }
 
   beta = estimate_betas(matrix(betas.tmp[, beta.warmup:beta.iterations], nrow=markers), method='density')
+  betas.tmp = c()
+  for(i in 1:length(beta)) betas.tmp = c(betas.tmp, beta[[i]]$M)
+  beta = betas.tmp
   rm(betas.tmp)
 
   betas[,1] = beta

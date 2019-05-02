@@ -95,9 +95,9 @@ phelex_m = function(x,
     return(energy)
   }
 
-  compute_liability = function(betas, normalize=normalize){
+  compute_liability = function(betas){
     lj = x %*% betas + mu
-    if(normalize) lj = scale(lj)
+    lj = scale(lj)
     return(lj)
   }
 
