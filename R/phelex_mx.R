@@ -65,7 +65,6 @@ phelex_mx = function(x,
   n = length(y)
 
   link = ifelse(link == 'plogis', plogis, pnorm)
-  beta.prior = ifelse(beta.prior == 'unif', dunif, dnorm)
 
   iterations = iterations
   num.params = 3  # sigmaA.index alpha, lambda,
@@ -100,6 +99,7 @@ phelex_mx = function(x,
     prior = sum(c(dnorm(betas, mean=0, sd=tau_vec, log = T),
                   dbeta(alpha, shape1 = alpha.prior[1], shape2 = alpha.prior[2], log = T),
                   dbeta(lambda, shape1 = lambda.prior[1], shape2 = lambda.prior[2], log = T),
+                  dbinom(x= gammaj, size=1, prob=1/length(betas), log=T),
                   LaplacesDemon::dinvgamma(tau[2], a[1], a[2], log=T)))
     energy = ll + prior
     return(energy)
@@ -107,6 +107,7 @@ phelex_mx = function(x,
 
   compute_liability = function(betas){
     lj = x %*% betas + u
+    lj =scale(lj)
     return(lj)
   }
 
@@ -201,6 +202,7 @@ phelex_mx = function(x,
   for(i in 2:iterations) {
     if ((!(i %% stamp)) & verbose) {
       print(paste(i, date()))
+      print(sum(accept.rate))
     }
     if (! i %% 1e2) { # Adaptive part of MH
       #update beta.jump.sd
