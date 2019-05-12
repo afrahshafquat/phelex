@@ -130,8 +130,8 @@ estimate_misclassification_probability = function(misclassified.samples,
 #' @param y Vector of observed phenotype
 #' @param misclassified.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
 #' @param misclassified.p.controls vector of misclassification probabilities for controls. If absent, only cases are switched
-#' @param case.threshold Threshold = percentile cut-off on misclassification probabilities. All cases with Pr(misclassification) > percentile threshold are switched to controls.
-#' @param control.threshold Threshold = percentile cut-off on misclassification probabilities. All controls with Pr(misclassification) > percentile threshold are switched to cases.
+#' @param case.threshold Threshold = percentile cut-off on misclassification probabilities. All cases with Pr(misclassification) > percentile threshold are switched to controls. (Default value: .99 i.e 99th percentile)
+#' @param control.threshold Threshold = percentile cut-off on misclassification probabilities. All controls with Pr(misclassification) > percentile threshold are switched to cases. (Default value: .99 i.e 99th percentile)
 #'
 #' @return Modified Phenotype according to misclassification probabilities provided
 #'

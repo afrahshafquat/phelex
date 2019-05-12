@@ -14,9 +14,9 @@ get_phenotype(misclassified.p.cases = NULL, misclassified.p.controls = NULL,
 
 \item{y}{Vector of observed phenotype}
 
-\item{case.threshold}{Threshold = percentile cut-off on misclassification probabilities. All cases with Pr(misclassification) > percentile threshold are switched to controls.}
+\item{case.threshold}{Threshold = percentile cut-off on misclassification probabilities. All cases with Pr(misclassification) > percentile threshold are switched to controls. (Default value: .99 i.e 99th percentile)}
 
-\item{control.threshold}{Threshold = percentile cut-off on misclassification probabilities. All controls with Pr(misclassification) > percentile threshold are switched to cases.}
+\item{control.threshold}{Threshold = percentile cut-off on misclassification probabilities. All controls with Pr(misclassification) > percentile threshold are switched to cases. (Default value: .99 i.e 99th percentile)}
 }
 \value{
 Modified Phenotype according to misclassification probabilities provided
