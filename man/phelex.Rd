@@ -4,11 +4,11 @@
 \alias{phelex}
 \title{Estimate misclassification in phenotype}
 \usage{
-phelex(x, y, A = NULL, iterations = 1e+05, alpha.prior = c(1, 1),
+phelex(x, y, A = NULL, iterations = 1e+05, alpha.prior = c(10, 1),
   lambda.prior = c(1, 1), link = "pnorm", beta.prior = "norm",
-  beta.prior.params = c(2, 1), beta.initial.vec = NULL,
-  sigmaA.initial = 0.01, beta.iterations = 2e+05,
-  beta.warmup = 20000, verbose = TRUE, stamp = 10000)
+  beta.prior.params = c(0, 1), beta.initial.vec = NULL,
+  sigmaA.initial = 0.001, beta.iterations = 2e+05, beta.warmup = 20000,
+  verbose = TRUE, stamp = 10000)
 }
 \arguments{
 \item{x}{Genotype matrix with dimensions n x m.}
@@ -19,9 +19,9 @@ phelex(x, y, A = NULL, iterations = 1e+05, alpha.prior = c(1, 1),
 
 \item{iterations}{Total number of iterations}
 
-\item{alpha.prior}{Beta prior parameters for true-positve rate}
+\item{alpha.prior}{Beta prior parameters for true positve rate}
 
-\item{lambda.prior}{Beta prior parameters for false-positive rate}
+\item{lambda.prior}{Beta prior parameters for false positive rate}
 
 \item{link}{probit or logistic model (options pnorm and plogis respectively)}
 
@@ -46,7 +46,7 @@ List containing
 \itemize{
  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
- Order is c(sigmaA, pi1, pi2) where pi1/pi2 = false positive/false negative rates, sigmaA = variance parameter
+ Order is c(sigmaA, alpha, lambda) where alpha = true positive rate, lambda = false positive rate, sigmaA = variance parameter
  \item misclassified.cases: Matrix of alpha vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
  \item misclassified.controls: Matrix of lambda vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
  \item posterior: Vector of posterior probability across iterations
