@@ -29,21 +29,21 @@
 #'  \item accept: Vector of 1/0 values across iterations; 1 indicates proposal was accepted at iteration;0 o/w
 #'  }
 #'
-#' @keywords phelex_m,misclassification,GWAS,phenotype,adaptive metropolis hastings
+#' @keywords phelex_mm,misclassification,GWAS,phenotype,adaptive metropolis hastings
 #'
 #' @import MASS
 #' @import utils
 #' @import truncdist
 #' @export
 #'
-phelex_m = function(x,
+phelex_mm = function(x,
                 y,
                 iterations = 1e5,
-                alpha.prior = c(1, 1),
+                alpha.prior = c(10, 1),
                 lambda.prior = c(1, 1),
                 link = 'pnorm',
                 beta.prior='norm',
-                beta.prior.params = c(1, 3),
+                beta.prior.params = c(0, 1),
                 beta.initial.vec = NULL,
                 mu.update = 0.5,
                 verbose = TRUE,
