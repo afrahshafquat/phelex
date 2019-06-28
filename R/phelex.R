@@ -162,10 +162,11 @@ phelex = function(x,
 
   beta = estimate_betas(matrix(betas.tmp[, beta.warmup:beta.iterations], nrow=markers), method='density')
   betas.tmp = c()
-  if(!(class(beta.tmp)=="numeric")) {
+  if(!(class(beta)=="numeric")) {
     for(i in 1:length(beta)) betas.tmp = c(betas.tmp, beta[[i]]$M) # modeest versions
+    beta = betas.tmp
   }
-  beta = betas.tmp
+
   rm(betas.tmp)
 
   betas[,1] = beta
