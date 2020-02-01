@@ -160,10 +160,12 @@ phelex = function(x,
   }
 
   beta = estimate_betas(matrix(betas.tmp[, beta.warmup:beta.iterations], nrow=markers), method='density')
-  betas.tmp = c()
-  for(i in 1:length(beta)) betas.tmp = c(betas.tmp, beta[[i]]$M)
-  beta = betas.tmp
-  rm(betas.tmp)
+  #if (class(beta[[i]])=="list"){
+  #  betas.tmp = c()
+  #  for(i in 1:length(beta)) betas.tmp = c(betas.tmp, beta[[i]]$M)
+  #  beta = betas.tmp
+  #  rm(betas.tmp)
+  #}
 
   betas[,1] = beta
   parameters[, 1] = c(sigmaA, alpha, lambda)
