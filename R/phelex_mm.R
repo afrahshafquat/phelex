@@ -22,28 +22,28 @@
 #' \itemize{
 #'  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
 #'  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
-#'  Order is c(mu, pi1, pi2) where pi1/pi2 = false positive/false negative rates, mu = mean effect size value
+#'  Order is c(mu, alpha, lambda) where alpha = true positive rate, lambda = false positive rate, mu = mean effect size value
 #'  \item misclassified.cases: Matrix of alpha vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
 #'  \item misclassified.controls: Matrix of lambda vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
 #'  \item posterior: Vector of posterior probability across iterations
 #'  \item accept: Vector of 1/0 values across iterations; 1 indicates proposal was accepted at iteration;0 o/w
 #'  }
 #'
-#' @keywords phelex_m,misclassification,GWAS,phenotype,adaptive metropolis hastings
+#' @keywords phelex_mm,misclassification,GWAS,phenotype,adaptive metropolis hastings
 #'
 #' @import MASS
 #' @import utils
 #' @import truncdist
 #' @export
 #'
-phelex_m = function(x,
+phelex_mm = function(x,
                 y,
                 iterations = 1e5,
-                alpha.prior = c(1, 1),
+                alpha.prior = c(10, 1),
                 lambda.prior = c(1, 1),
                 link = 'pnorm',
                 beta.prior='norm',
-                beta.prior.params = c(1, 3),
+                beta.prior.params = c(0, 1),
                 beta.initial.vec = NULL,
                 mu.update = 0.5,
                 verbose = TRUE,

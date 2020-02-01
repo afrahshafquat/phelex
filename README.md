@@ -73,7 +73,7 @@ For documentation on other parameters, please refer to documentation provided.
 
 PheLEx encloses three methods other than PheLEx: 
 
-1. **phelex_m**: PheLEx without mixed effects 
+1. **phelex_mm**: PheLEx without mixed model 
 2. **rekaya**: [Rekaya's method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5138056/)
 3. **phelex_mh**: PheLEx with Gibbs sampling instead of Adaptive Metropolis-Hastings within Gibbs
 

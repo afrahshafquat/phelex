@@ -35,10 +35,6 @@ remove_na = function(x) {
 #' @export
 estimate_betas = function(betas,  method = 'shorth') {
   betas = betas
-  # final_betas = rep(0, nrow(betas))
-  # for(k in 1:nrow(betas)){
-  #   final_betas[k] = get_beta(betas[k, ], method = method)
-  # }
   final_betas = apply(betas, 1, modeest::mlv, method=method)
   return(final_betas)
 }
@@ -134,9 +130,8 @@ estimate_misclassification_probability = function(misclassified.samples,
 #' @param y Vector of observed phenotype
 #' @param misclassified.p.cases vector of misclassification probabilities for cases. If absent, only controls are switched
 #' @param misclassified.p.controls vector of misclassification probabilities for controls. If absent, only cases are switched
-#' @param case.threshold All cases with Pr(misclassification) >= threshold are switched to controls.
-#' Default value is mean(probability) + 2*sd(probability).
-#' @param control.threshold All controls with Pr(misclassification) >= threshold are switched to cases
+#' @param case.threshold Threshold = percentile cut-off on misclassification probabilities. All cases with Pr(misclassification) > percentile threshold are switched to controls. (Default value: .99 i.e 99th percentile)
+#' @param control.threshold Threshold = percentile cut-off on misclassification probabilities. All controls with Pr(misclassification) > percentile threshold are switched to cases. (Default value: .99 i.e 99th percentile)
 #'
 #' @return Modified Phenotype according to misclassification probabilities provided
 #'
@@ -148,30 +143,21 @@ get_phenotype = function(misclassified.p.cases=NULL,
                          y,
                          case.threshold=NULL,
                          control.threshold=NULL) {
-  case.inds = (y == 1)
-  control.inds = which(!case.inds)
-  case.inds = which(case.inds)
+  case.inds = which(y == 1)
+  control.inds = which(y == 0)
   corrected.phenotype = y
 
   # Switch cases to controls
   if(!is.null(misclassified.p.cases)){
-
-    if(is.null(case.threshold)){  # Provide threshold if not specified
-      case.threshold = mean(misclassified.p.cases) + (2 * sd(misclassified.p.cases))
-    }
-
-    flip.inds = which(misclassified.p.cases >= case.threshold)
-    corrected.phenotype[case.inds[flip.inds]]=0
+    if(is.null(case.threshold)) case.threshold = .99
+    flip.inds = which(misclassified.p.cases >= quantile(misclassified.p.cases, case.threshold))
+    corrected.phenotype[case.inds[flip.inds]] = 0
   }
 
   # Switch controls to cases
   if(!is.null(misclassified.p.controls)){
-
-    if(is.null(control.threshold)){  # Provide threshold if not specified
-      control.threshold = mean(misclassified.p.controls) + (2 * sd(misclassified.p.controls))
-    }
-
-    flip.inds = which(misclassified.p.controls >= control.threshold)
+    if(is.null(control.threshold)) control.threshold = .99
+    flip.inds = which(misclassified.p.controls >= quantile(misclassified.p.cases, case.threshold))
     corrected.phenotype[control.inds[flip.inds]] = 1
   }
 

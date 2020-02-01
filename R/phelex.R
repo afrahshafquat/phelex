@@ -8,8 +8,8 @@
 #' @param x Genotype matrix with dimensions n x m.
 #' @param A Genetic similarity matrix with dimensions n x n.
 #' @param iterations Total number of iterations
-#' @param alpha.prior Beta prior parameters for true-positve rate
-#' @param lambda.prior Beta prior parameters for false-positive rate
+#' @param alpha.prior Beta prior parameters for true positve rate
+#' @param lambda.prior Beta prior parameters for false positive rate
 #' @param beta.prior 'norm'(default): Normal prior or 'unif' Uniform prior on fixed effects
 #' @param beta.prior.params if beta.prior is norm, then (mean, sd), if unif then (min, max)
 #' @param beta.initial.vec Initial values for fixed effects
@@ -25,7 +25,7 @@
 #' \itemize{
 #'  \item betas: Matrix of estimated effect sizes for each SNP (SNPs[rows] x iterations[columns]).
 #'  \item parameters: Matrix with estimated parameter values[rows] across iterations[columns].
-#'  Order is c(sigmaA, pi1, pi2) where pi1/pi2 = false positive/false negative rates, sigmaA = variance parameter
+#'  Order is c(sigmaA, alpha, lambda) where alpha = true positive rate, lambda = false positive rate, sigmaA = variance parameter
 #'  \item misclassified.cases: Matrix of alpha vectors where 1s represent false positives and 0s represent true positives as inferred at each iterations
 #'  \item misclassified.controls: Matrix of lambda vectors where 1s represent false negatives and 0s represent true negatives as inferred at each iterations
 #'  \item posterior: Vector of posterior probability across iterations
@@ -43,13 +43,13 @@ phelex = function(x,
                   y,
                   A=NULL,
                   iterations = 1e5,
-                  alpha.prior = c(1, 1),
+                  alpha.prior = c(10, 1),
                   lambda.prior = c(1, 1),
                   link = 'pnorm',
                   beta.prior = 'norm',
-                  beta.prior.params = c(2, 1),
+                  beta.prior.params = c(0, 1),
                   beta.initial.vec = NULL,
-                  sigmaA.initial = 0.01,
+                  sigmaA.initial = 1e-3,
                   beta.iterations = 2e5,
                   beta.warmup = 2e4,
                   verbose = TRUE,
@@ -117,9 +117,10 @@ phelex = function(x,
   betas.tmp = matrix(0, nrow = markers, ncol = beta.iterations)
   if(verbose) print(paste('Warmups for Beta, Alpha and Lambda', date()))
   beta.accept=rep(0, beta.iterations)
+  beta.mid = beta.iterations*.5
   # Adaptive Metropolis Hastings sampling algorithm for initial estimates for parameters
   for(i in 1:beta.iterations) {
-    if((!(i %% 1e5)) & verbose) {
+    if((!(i %% beta.mid)) & verbose) {
       print(paste(i, date()))
     }
     if (! i %% 1e2) { # Adaptive part of MH
@@ -160,12 +161,14 @@ phelex = function(x,
   }
 
   beta = estimate_betas(matrix(betas.tmp[, beta.warmup:beta.iterations], nrow=markers), method='density')
-  #if (class(beta[[i]])=="list"){
-  #  betas.tmp = c()
-  #  for(i in 1:length(beta)) betas.tmp = c(betas.tmp, beta[[i]]$M)
-  #  beta = betas.tmp
-  #  rm(betas.tmp)
-  #}
+
+  betas.tmp = c()
+  if(!(class(beta)=="numeric")) {
+    for(i in 1:length(beta)) betas.tmp = c(betas.tmp, beta[[i]]$M) # modeest versions
+    beta = betas.tmp
+  }
+
+  rm(betas.tmp)
 
   betas[,1] = beta
   parameters[, 1] = c(sigmaA, alpha, lambda)
